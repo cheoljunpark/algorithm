@@ -3,4 +3,4 @@ FROM used_goods_board AS a
 JOIN used_goods_reply AS b 
     ON a.board_id = b.board_id
 WHERE a.created_date LIKE '2022-10%'
-ORDER BY b.created_date ASC, a.title ASC
+ORDER BY b.created_date ASC, a.title ASC;
