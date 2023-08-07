@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,8 +38,8 @@ public class Main {
 		}
 		
 		
-		sb.append("<");
 		// 1부터 순회하면서 deque가 빌때까지 k번째 요소 삭제하기
+		sb.append("<");
 		while (deque.size() != 1) {
 			for(int i = 0; i<k-1;i++) {
 				deque.offerLast(deque.pollFirst());
@@ -48,8 +47,8 @@ public class Main {
 			sb.append(deque.pollFirst()).append(", ");
 		}
 		sb.append(deque.pollFirst()).append(">");
+		
 		// 대괄호를 꺽새로 바꾸기
-//		sb.append("<").append(list.toString().substring(1, list.toString().length()-1)).append(">");
 		System.out.println(sb);
 
 	}
