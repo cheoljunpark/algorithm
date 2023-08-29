@@ -28,6 +28,14 @@ public class Solution {
 			this.x = x;
 			this.y = y;
 		}
+		
+		static int distance(Pos coordinate, Pos center) { // 거리 구하는 메소드
+			return Math.abs(coordinate.x - center.x)+ Math.abs(coordinate.y - center.y);
+		}
+		
+		int distance(Pos center) { // 거리 구하는 메소드
+			return Math.abs(this.x - center.x)+ Math.abs(this.y - center.y);
+		}
 	}
 
 	static int distance(Pos coordinate, Pos center) { // 거리 구하는 메소드
@@ -65,7 +73,7 @@ public class Solution {
 				for (int colIdx = 0; colIdx < mapSize; colIdx++) {
 					map[rowIdx][colIdx] = Integer.parseInt(str[colIdx]);
 					Pos coordinate = new Pos(rowIdx, colIdx); // 현재 좌표 구해서
-					if (distance(coordinate, center) <= mapRadius) { // 중심과의 거리가 맵 반지름 이하라면
+					if (coordinate.distance(center) <= mapRadius) { // 중심과의 거리가 맵 반지름 이하라면
 						sum += map[rowIdx][colIdx]; // 수익에 더하기
 					}
 				}
