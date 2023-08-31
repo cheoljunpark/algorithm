@@ -1,80 +1,125 @@
-import java.util.Scanner;
- 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 /**
  * 
  * @author 박철준
  * 
  * 1. 테스트 케이스(testCase)를 입력받는다
- * 2. 각 테스트 케이스별로 달팽이의 크기(n)을 입력받고
- * 3. nXn 행렬(arr)과 방문했는지 여부를 판단하는 nXn행렬 (visited)를 선언한다
- * 4. 시계방향으로 돌면서 1부터 차례대로 배열에 저장한다
- * 5. n까지 저장이 되었다면 완료
+ * 2. 각 테스트 케이스별로 맵 사이즈(mapSize)를 입력받는다
+ * 3. mapSize x mapSize 크기의 맵(map)을 생성한다
+ * 4. mapSize x mapSize 크기의 방문처리(visited)를 생성한다
+ * 5. 맵의 좌표(0, 0)부터 순회를 시작한다
+ *    5.1 순회하면서 이동 횟수(movedCount)를 맵에 저장한다 
+ *    5.2 초기 순회 방향을 동쪽으로 순회한다
+ *    5.3 동쪽으로가다가 경계값에 도달하면 방향을 남쪽으로 변경한다
+ *    5.4 남쪽으로가다가 경계값에 도달하면 방향을 서쪽으로 변경한다
+ *    5.5 서쪽으로가다가 경계값에 도달하면 방향을 북쪽으로 변경한다
+ *    5.6 북쪽으로가다가 경계값에 도달하면 방향을 동쪽으로 변경한다
+ * 6. (5.2 ~ 5.5)를 반복하면서 이동횟수가 mapsize*mapSize와 같아진다면 종료
+ * 7. 맵을 출력
  *
  */
- 
+
 public class Solution {
- 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
- 
-        int testCase = sc.nextInt(); // 테스트 케이스 개수
- 
-        for (int tc = 0; tc < testCase; tc++) {
-            int n = sc.nextInt(); // 달팽이의 크기
- 
-            int[][] arr = new int[n][n];
-            boolean[][] visited = new boolean[n][n]; // 방문했는지 여부 배열
- 
-            int rowIdx = 0; // 시계방향으로 돌 때 행 인덱스
-            int colIdx = 0; // 시계방향으로 돌 때 열 인덱스
-            int cnt = 1; // 1부터 n까지 차례대로 증가하면서 저장할 변수
- 
-            while (cnt != n * n + 1) { // 1부터 n까지 다 저장할때까지
- 
-                // 오른쪽으로 가기
-                while (colIdx < n && visited[rowIdx][colIdx] == false) { // 달팽이 크기만큼 and 방문하지않은곳으로 가기
-                    visited[rowIdx][colIdx] = true; // 방문표시
-                    arr[rowIdx][colIdx++] = cnt++;
-                }
-                colIdx--;   // 오른쪽으로 가면서 범위를 벗어나서 열 인덱스 감소
-                rowIdx++;   // 열 인덱스 감소하면 이미 방문했던 곳으로 되어있어서 행 인덱스 증가
- 
-                // 아래로 가기
-                while (rowIdx < n && visited[rowIdx][colIdx] == false) { // 달팽이 크기만큼 and 방문하지않은곳으로 가기
-                    visited[rowIdx][colIdx] = true; // 방문표시
-                    arr[rowIdx++][colIdx] = cnt++;
-                }
-                rowIdx--;   // 아래로 가면서 범위를 벗어나서 행 인덱스 감소
-                colIdx--;   // 행 인덱스 감소하면 이미 방문했던 곳으로 되어있어서 열 인덱스 감소
- 
-                // 왼쪽으로 가기
-                while (colIdx >= 0 && visited[rowIdx][colIdx] == false) {    // 달팽이 크기만큼 and 방문하지않은곳으로 가기
-                    visited[rowIdx][colIdx] = true; // 방문표시
-                    arr[rowIdx][colIdx--] = cnt++;
-                }
-                colIdx++;   // 왼쪽으로 가면서 범위를 벗어나서 열 인덱스 증가
-                rowIdx--;   // 열 인덱스 증가하면 이미 방문했던 곳으로 되어있어서 행 인덱스 감소
- 
-                // 위로 가기
-                while (rowIdx > 0 && visited[rowIdx][colIdx] == false) { // 달팽이 크기만큼 and 방문하지않은곳으로 가기
-                    visited[rowIdx][colIdx] = true; // 방문표시
-                    arr[rowIdx--][colIdx] = cnt++;
-                }
-                rowIdx++;   // 위로 가면서 범위를 벗어나서 행 인덱스 증가
-                colIdx++;   // 행 인덱스 증가하면 이미 방문했던 곳으로 되어있어서 열 인덱스 증가
-            }
- 
-            // 배열 출력
-            System.out.println("#" + (tc + 1));
-            for (int row = 0; row < arr.length; row++) {
-                for (int col = 0; col < arr[row].length; col++) {
-                    System.out.print(arr[row][col] + " ");
-                }
-                System.out.println();
-            }
- 
-        }
- 
-    }
- 
+	static int mapSize;
+	static int[][] map;
+	static boolean[][] visited;
+	static final int[][] DIRECTION = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } }; // 동, 남, 서, 북
+	static int[] currentDirection;
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static StringBuilder sb = new StringBuilder();
+
+	static class Pos { // 좌표 클래스
+		int x, y;
+
+		public Pos(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		void move() {
+			this.x += currentDirection[0];
+			this.y += currentDirection[1];
+		}
+	}
+
+	static void checkBoundary(Pos pos) {	// 경계값 확인하는 메소드
+		if (pos.x + currentDirection[0] == -1 || pos.x + currentDirection[0] == mapSize
+				|| pos.y + currentDirection[1] == -1 || pos.y + currentDirection[1] == mapSize) { // 다음 값이 경계값이라면 방향 변경
+			changeDirection();
+		} else if (visited[pos.x + currentDirection[0]][pos.y + currentDirection[1]]) {	// 다음 값이 방문한적이 있는 곳이라면 방향 변경
+			changeDirection();
+		}
+	}
+
+	static void changeDirection() {	// 순회 방향 변경하는 메소드
+		if (currentDirection[0] == DIRECTION[0][0] && currentDirection[1] == DIRECTION[0][1]) { // 동쪽 방향이였다면 남쪽 방향으로 변경
+			currentDirection[0] = DIRECTION[1][0];
+			currentDirection[1] = DIRECTION[1][1];
+		} else if (currentDirection[0] == DIRECTION[1][0] && currentDirection[1] == DIRECTION[1][1]) { // 남쪽 방향이였다면 서쪽 방향으로 변경
+			currentDirection[0] = DIRECTION[2][0];
+			currentDirection[1] = DIRECTION[2][1];
+		} else if (currentDirection[0] == DIRECTION[2][0] && currentDirection[1] == DIRECTION[2][1]) { // 서쪽 방향이였다면 북쪽 방향으로 변경
+			currentDirection[0] = DIRECTION[3][0];
+			currentDirection[1] = DIRECTION[3][1];
+		} else { // 북쪽 방향이였다면 동쪽 방향으로 변경
+			currentDirection[0] = DIRECTION[0][0];
+			currentDirection[1] = DIRECTION[0][1];
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+
+		// 테스트 케이스 입력
+		int testCase = Integer.parseInt(br.readLine().trim());
+
+		for (int tc = 1; tc <= testCase; tc++) {
+
+			// 맵 사이즈 입력받기
+			mapSize = Integer.parseInt(br.readLine().trim());
+
+			// 맵 생성
+			map = new int[mapSize][mapSize];
+
+			// 방문처리 생성
+			visited = new boolean[mapSize][mapSize];
+
+			// 순회 시작할 좌표 값
+			Pos pos = new Pos(0, 0);
+
+			// 맵 순회하면서 값 저장
+			int movedCount = 0; // 이동 횟수 초기화
+
+			// 초기 방향(동쪽) 세팅
+			currentDirection = new int[2];
+			currentDirection[0] = DIRECTION[0][0];
+			currentDirection[1] = DIRECTION[0][1];
+
+			while (true) {
+				if (movedCount == mapSize * mapSize) { // 종료 조건(맵에 값을 다 채웠다면 종료)
+					break;
+				}
+
+				map[pos.x][pos.y] = ++movedCount; // 맵에 값을 저장하고
+				visited[pos.x][pos.y] = true; // 방문처리하고
+				checkBoundary(pos); // 이동하기 전에 경계값 체크해서 이동 방향 변경하고
+				pos.move();// 좌표값 이동
+
+			}
+
+			// 맵 값 append
+			sb.append("#").append(tc).append("\n");
+			for (int rowIdx = 0; rowIdx < mapSize; rowIdx++) {
+				for (int colIdx = 0; colIdx < mapSize; colIdx++) {
+					sb.append(map[rowIdx][colIdx]).append(" ");
+				}
+				sb.append("\n");
+			}
+		}
+
+		System.out.println(sb);
+	}
+
 }
