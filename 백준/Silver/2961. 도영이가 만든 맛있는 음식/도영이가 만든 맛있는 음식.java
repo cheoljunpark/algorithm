@@ -14,12 +14,13 @@ import java.util.StringTokenizer;
  * 
  */
 
+
 public class Main {
 	static int ingredientCount;
 	static Ingredient[] ingredientList;
 	static boolean[] visited;
 	static int sourMinusBitter;
-	static int minSourMinusBitter = 1000000000;
+	static int minSourMinusBitter = Integer.MAX_VALUE;
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
 
@@ -45,10 +46,12 @@ public class Main {
 					bitterTotal += ingredientList[ingredientIdx].bitter;
 				}
 			}
-			if(sourTotal!=1&&bitterTotal!=0) {
+
+			if (sourTotal != 1 && bitterTotal != 0) { // 부분집합 중에 신맛 쓴맛 계산을 한 것일 때 아래 로직 수행
 				sourMinusBitter = Math.abs(sourTotal - bitterTotal);
 				minSourMinusBitter = Math.min(minSourMinusBitter, sourMinusBitter);
 			}
+
 			return;
 		}
 
@@ -82,15 +85,8 @@ public class Main {
 
 		// 재료 리스트에서 부분집합을 구해
 		// 신맛과 쓴맛의 차이가 최소인 값 구하기
-		// 재료가 하나라면 그냥 (신맛-쓴맛)의 절댓값을 구하고, 하나 이상이면 부분집합 메소드 호출
-//		if (ingredientCount == 1) {
-//			minSourMinusBitter = Math.abs(ingredientList[0].sour - ingredientList[0].bitter);
-//		} else {
-//			powerSet(0);
-//		}
-		
 		powerSet(0);
-		
+
 		// 신맛과 쓴맛 차이의 최소값 출력
 		System.out.println(minSourMinusBitter);
 	}
