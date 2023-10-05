@@ -38,6 +38,8 @@ public class Solution {
 
 			// 최댓값 저장 변수 선언
 			int maxVal = Integer.MIN_VALUE;
+
+			// 최댓값 찾기
 			for (int idx = 0; idx < numList.length; idx++) {
 				if (numList[idx] > maxVal) {
 					maxVal = numList[idx];
