@@ -16,16 +16,16 @@ public class Solution {
 
     public static void main(String[] args) throws IOException {
 
-        char[] arr = br.readLine().trim().toCharArray();    // 입력받은 문자열을 char 배열에 담기
-        for (char c : arr) {    // 배열에 각 문자 순회
-            if (c >= 'a' && c <= 'z') { // 문자가 소문자라면
-                System.out.print((char) (c - 'a' + 'A'));    // 대문자로 출력
-            } else {    // 문자가 소문자가 아니라면
-                System.out.print(c);    // 그대로 출력
-            }
-        }
+//        char[] arr = br.readLine().trim().toCharArray();    // 입력받은 문자열을 char 배열에 담기
+//        for (char c : arr) {    // 배열에 각 문자 순회
+//            if (c >= 'a' && c <= 'z') { // 문자가 소문자라면
+//                System.out.print((char) (c - 'a' + 'A'));    // 대문자로 출력
+//            } else {    // 문자가 소문자가 아니라면
+//                System.out.print(c);    // 그대로 출력
+//            }
+//        }
 
-//        // String 클래스의 toUpperCase() 메소드 사용
-//        System.out.println(br.readLine().trim().toUpperCase());
+        // String 클래스의 toUpperCase() 메소드 사용
+        System.out.println(br.readLine().trim().toUpperCase());
     }
 }
