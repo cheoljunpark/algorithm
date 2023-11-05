@@ -2,78 +2,85 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- * 
- * @author 박철준
- * 
- * 1. 테스트 케이스(testCase)를 입력받는다
- * 2. 각 테스트 케이스별로 원래의 메모리 값(originalMemory)을 입력받아 int형 배열에 넣는다
- * 3. 초기화된 배열(initMemory)을 생성한다
- * 4. initMemory와 originalMemory의 각 인덱스에 해당하는
- *    값을 비교해서 다르면 해당 인덱스 부터 initMemory의 끝 인덱스까지 값을 바꾼다
- * 5. 값을 바꾼 횟수(changeCnt)를 계산한다  
- *
+/*
+ * 1. 테스트 케이스를 입력받는다
+ * 2. 각 테스트 케이스별로 숫자를 입력받아 리스트(originNumList)에 넣는다
+ * 3. originNumList의 크기만큼 리스트(numList)를 생성한다
+ * 4. originNumList의 각 인덱스를 순회하면서 값이 같으면 패스하고
+ *    값이 다르면 해당 값으로 numList의 인덱스부터 끝가지 해당 값으로 변경
+ * 5.
  */
-
 public class Solution {
-	static int[] originalMemory, initMemory; // 원래 메모리, 초기 메모리
-	static int changeCnt; // 수정 횟수
+    static int testCase;
+    static int[] originNumList, numList;
+    static int changeCnt;
 
-	static boolean isEqual() { // 원래 메모리와 초기 메모리가 동일해 졌는지 확인하는 메소드
-		for (int idx = 0; idx < originalMemory.length; idx++) {
-			if (originalMemory[idx] != initMemory[idx]) {
-				return false;
-			}
-		}
-		return true;
-	}
+    /**
+     * 원래 메모리값과 변경된 메모리값이 같은지 확인하는 메소드
+     *
+     * @return 같으면 true,<br> 다르면 false
+     */
+    static boolean isEqual() {
+        for (int idx = 0; idx < originNumList.length; idx++) {
+            if (originNumList[idx] != numList[idx]) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	static void change(int idx, int number) { // 해당 인덱스에서부터 끝까지 원래 메모리 값의 숫자로 바꾸기
-		for (int initMemoryIdx = idx; initMemoryIdx < initMemory.length; initMemoryIdx++) {
-			initMemory[initMemoryIdx] = number;
-		}
-	}
+    /**
+     * 입력받은 인덱스부터 끝 인덱스까지 <br>
+     * 메모리값을 바꾸는 메소드
+     *
+     * @param idx       바꾸기 사작할 인덱스
+     * @param originNum 해당 인덱스의 원래 메모리 값
+     */
+    static void change(int idx, int originNum) {
+        for (int i = idx; i < numList.length; i++) {
+            numList[i] = originNum;
+        }
+    }
 
-	public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
-		// 테스트 케이스 입력받기
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int testCase = Integer.parseInt(br.readLine().trim());
+        // 테스트 케이스 입력
+        testCase = Integer.parseInt(br.readLine().trim());
 
-		for (int tc = 1; tc <= testCase; tc++) {
-			// 원래 메모리 값 입력받아서 크기만큼 배열 생성
-			String[] str = br.readLine().trim().split("");
-			originalMemory = new int[str.length];
+        // 각 테스트 케이스별로
+        for (int tc = 1; tc <= testCase; tc++) {
 
-			// 원래 메모리 값 넣어주기
-			for (int idx = 0; idx < originalMemory.length; idx++) {
-				originalMemory[idx] = Integer.parseInt(str[idx]);
-			}
+            // 원래 메모리 값 리스트 생성
+            String[] str = br.readLine().trim().split("");
+            originNumList = new int[str.length];
+            for (int idx = 0; idx < str.length; idx++) {
+                originNumList[idx] = Integer.parseInt(str[idx]);
+            }
 
-			// 초기화된 메모리 배열 생성
-			initMemory = new int[str.length];
+            // 초기화 된 메모리 리스트 생성
+            numList = new int[originNumList.length];
 
-			// initMemory와 originalMemory의 각 인덱스 비교해서 값 바꾸기
-			// 값 바뀔 때마다 수정 횟수 계산
-			changeCnt = 0; // 수정 횟수 0으로 초기화
+            // 바꾼 횟수 초기화
+            changeCnt = 0;
 
-			for (int idx = 0; idx < originalMemory.length; idx++) {
-				// initMemory와 originalMemory의 각 인덱스에 해당하는 값을 비교해서 다르면 해당 인덱스 부터 initMemory의 끝
-				// 인덱스까지 값을 바꾼다
-				if (originalMemory[idx] != initMemory[idx]) {
-					int number = originalMemory[idx]; // 원래 메모리의 값을 number에 저장해 파라미터로 넘겨주기
-					change(idx, number); // 초기 메모리 값 바꾸기
-					changeCnt++; // 수정 횟수 증가
-					if (isEqual()) { // 초기화된 메모리가 원래 메모리와 동일해 졌다면
-						break;
-					}
-				}
+            // 각 인덱스 비교
+            for (int idx = 0; idx < originNumList.length; idx++) {
+                if (isEqual()) {    // 원래 메모리와 초기화 되었던 메모리가 같아졌다면
+                    break;
+                }
+                if (originNumList[idx] != numList[idx]) {   // 해당 인덱스의 원래 메모리값과 초기화 되었던 메모리값이 다르다면
+                    change(idx, originNumList[idx]);    // 해당 인덱스부터 끝 인덱스까지 원래 메모리값으로 바꾸기
+                    changeCnt++;    // 바꾼 횟수 증가
+                }
+            }
 
-			}
+            // 바꾼 횟수 append
+            sb.append("#").append(tc).append(" ").append(changeCnt).append("\n");
+        }
 
-			// 수정 횟수 출력
-			System.out.println("#" + tc + " " + changeCnt);
-		}
-	}
-
+        // 정답 출력
+        System.out.println(sb);
+    }
 }
