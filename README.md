@@ -1,2 +1,3 @@
-# algorithm
-Problem-Solving
+# Algorithm Problems Repository
+
+이 레포지토리는 백준, 프로그래머스, SWEA의 알고리즘 문제를 풀고 소스코드를 저장하는 공간입니다. 다양한 알고리즘 문제를 풀면서 학습한 내용을 정리하고, 코드와 함께 저장하여 참고할 수 있도록 구성되었습니다.
