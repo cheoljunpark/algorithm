@@ -1,9 +1,12 @@
 def solution(array, commands):
-    answer = []
+    result = []
     
     for command in commands:
-        a= array[command[0]-1:command[1]]
-        a.sort()
-        answer.append(a[command[2]-1])
-    
-    return answer
+        i=command[0]
+        j=command[1]
+        k=command[2]
+        
+        slice_array = sorted(array[i-1:j])
+        result.append(slice_array[k-1])
+        
+    return result
